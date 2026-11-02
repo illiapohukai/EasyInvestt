@@ -1,0 +1,16 @@
+{
+  "name": "Geldstart – Geld verstehen",
+  "short_name": "Geldstart",
+  "description": "Lern-App zu Geld und Geldanlage für junge Menschen von 16 bis 20. Nur zu Bildungszwecken.",
+  "lang": "de",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f6f3",
+  "theme_color": "#f6f6f3",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

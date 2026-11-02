@@ -1,0 +1,254 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+/*
+ * Design tokens
+ * One accent colour (green), neutral surfaces and a small set of semantic
+ * colours for status information. Light mode only.
+ */
+@theme inline {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Noto Sans", sans-serif;
+  --font-display: var(--font-sans);
+
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: calc(var(--radius) - 2px);
+  --radius-xl: var(--radius);
+  --radius-2xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--foreground);
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-secondary: var(--muted);
+  --color-secondary-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--primary-soft);
+  --color-accent-foreground: var(--primary-strong);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-destructive: var(--destructive);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-destructive-foreground: var(--primary-foreground);
+  --color-chart-contribution: var(--chart-contribution);
+  --color-chart-growth: var(--chart-growth);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  color-scheme: light;
+  --radius: 0.75rem;
+
+  --background: #f6f6f3;
+  --foreground: #1c2321;
+  --card: #ffffff;
+  --muted: #eeeeea;
+  --muted-foreground: #565d5a;
+  --border: #e0e0db;
+  --input: #c9cbc6;
+
+  --primary: #1a6a55;
+  --primary-strong: #124d3e;
+  --primary-foreground: #ffffff;
+  --primary-soft: #e3f0eb;
+
+  --warning: #8a4f0c;
+  --warning-soft: #fcf0e1;
+  --info: #22598f;
+  --info-soft: #e7eff8;
+  --destructive: #b42318;
+  --destructive-soft: #fdecea;
+
+  --chart-contribution: #aab3b0;
+  --chart-growth: #1a6a55;
+
+  --ring: #1a6a55;
+
+  /* Layout helpers */
+  --bottom-nav-height: 4rem;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: 1rem;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  button,
+  [role="button"],
+  summary {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Surface used for all cards */
+@utility surface {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+}
+
+/* Readable width for running text */
+@utility prose-width {
+  max-width: 42rem;
+}
+
+/* Hatched fill to distinguish chart series without relying on colour */
+@utility hatch {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgb(255 255 255 / 0.28) 0 2px,
+    transparent 2px 6px
+  );
+}
+
+/* Native range input, styled for touch */
+@utility range-input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 2.75rem;
+  background: transparent;
+  touch-action: pan-y;
+
+  &::-webkit-slider-runnable-track {
+    height: 0.375rem;
+    border-radius: 999px;
+    background: linear-gradient(
+      to right,
+      var(--primary) 0 var(--range-progress, 0%),
+      var(--muted) var(--range-progress, 0%) 100%
+    );
+  }
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: -0.5625rem;
+    border-radius: 999px;
+    background: var(--card);
+    border: 2px solid var(--primary);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+  }
+
+  &::-moz-range-track {
+    height: 0.375rem;
+    border-radius: 999px;
+    background: var(--muted);
+  }
+
+  &::-moz-range-progress {
+    height: 0.375rem;
+    border-radius: 999px;
+    background: var(--primary);
+  }
+
+  &::-moz-range-thumb {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    background: var(--card);
+    border: 2px solid var(--primary);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible::-webkit-slider-thumb {
+    outline: 3px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  &:focus-visible::-moz-range-thumb {
+    outline: 3px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+/* Horizontal page padding that respects device safe areas (notches) */
+@utility page-gutter {
+  padding-left: max(1rem, var(--safe-left));
+  padding-right: max(1rem, var(--safe-right));
+
+  @media (width >= 40rem) {
+    padding-left: max(1.5rem, var(--safe-left));
+    padding-right: max(1.5rem, var(--safe-right));
+  }
+}

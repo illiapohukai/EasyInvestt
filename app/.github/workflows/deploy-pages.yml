@@ -1,0 +1,63 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck, lint and test
+        run: |
+          bun run typecheck
+          bun run lint
+          bun run test
+
+      - name: Build
+        run: bun run build
+        env:
+          # Project sites live under /<repository-name>/. Set the repository
+          # variable BASE_PATH to "/" for user/organisation sites or custom domains.
+          BASE_PATH: ${{ vars.BASE_PATH || format('/{0}/', github.event.repository.name) }}
+          # Optional Übungsdepot market data. Without MARKET_DATA_API_URL the app
+          # uses fictional sample data. These are public URLs/names – use
+          # repository *variables*, never secrets or API keys.
+          VITE_MARKET_DATA_API_URL: ${{ vars.MARKET_DATA_API_URL }}
+          VITE_MARKET_DATA_PROVIDER_NAME: ${{ vars.MARKET_DATA_PROVIDER_NAME }}
+          VITE_MARKET_DATA_PROVIDER_URL: ${{ vars.MARKET_DATA_PROVIDER_URL }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/client
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
